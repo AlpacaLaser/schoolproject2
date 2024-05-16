@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from abc import ABC, abstractmethod
 
-print("**** HotelArt ****")
+print('***HotelArt***')
 
 
 class Szoba(ABC):
@@ -79,22 +79,7 @@ class Foglalas:
         return self.szoba.osszkoltseg((self.vegso_datum - self.foglalas_datum).days)
 
 
-# Szálloda, szobák és foglalások feltöltése
-hotel = Szalloda("Luxus Hotel")
-hotel.uj_szoba(EgyagyasSzoba("1"))
-hotel.uj_szoba(EgyagyasSzoba("2"))
-hotel.uj_szoba(KetagyasSzoba("3"))
-
-# Foglalások
-hotel.foglalas("1", "2024-04-25", 3)
-hotel.foglalas("2", "2024-04-27", 2)
-hotel.foglalas("3", "2024-04-29", 4)
-hotel.foglalas("1", "2024-05-02", 5)
-hotel.foglalas("2", "2024-05-06", 2)
-
-
-# Felhasználói interfész
-def foglalas_felvetel():
+def foglalas_felvetel(hotel):
     szobaszam = input("Kérem, adja meg a foglalni kívánt szoba számát (1-60:Egyágyas - 61-120:Kétágyas): ")
 
     # Ellenőrizze, hogy az adott szoba létezik-e és milyen típusú
@@ -132,7 +117,7 @@ def foglalas_felvetel():
     print(hotel.foglalas(szobaszam, datum.strftime("%Y-%m-%d"), napok_szama))
 
 
-def foglalas_leadas():
+def foglalas_leadas(hotel):
     if not hotel.foglalasok:  # Ha nincs egyetlen foglalás sem
         print("Jelenleg nincsen foglalás!")
         return
@@ -146,30 +131,48 @@ def foglalas_leadas():
     print("Nincs ilyen foglalás.")
 
 
-def foglalasok_listazasa():
+def foglalasok_listazasa(hotel):
     print("Foglalások:")
     for i, foglalas in enumerate(hotel.foglalasok, 1):
         print(
             f"{i}. Szoba: {foglalas.szoba.szobaszam}, Dátum: {foglalas.foglalas_datum.strftime('%Y-%m-%d')}, Napok száma: {foglalas.vegso_datum - foglalas.foglalas_datum}")
 
 
-while True:
-    print("\nVálasszon műveletet:")
-    print("1. Foglalás felvétele")
-    print("2. Foglalás lemondása")
-    print("3. Foglalások listázása")
-    print("4. Kilépés")
+def main():
+    # Szálloda, szobák és foglalások feltöltése
+    hotel = Szalloda("Luxus Hotel")
+    hotel.uj_szoba(EgyagyasSzoba("1"))
+    hotel.uj_szoba(EgyagyasSzoba("2"))
+    hotel.uj_szoba(KetagyasSzoba("3"))
 
-    valasztas = input("Kérem, adja meg a választott művelet sorszámát: ")
+    # Foglalások hozzáadása
+    hotel.foglalas("1", "2024-06-01", 3)
+    hotel.foglalas("2", "2024-06-05", 4)
+    hotel.foglalas("3", "2024-06-08", 2)
+    hotel.foglalas("1", "2024-06-12", 5)
+    hotel.foglalas("3", "2024-06-20", 3)
 
-    if valasztas == "1":
-        foglalas_felvetel()
-    elif valasztas == "2":
-        foglalas_leadas()
-    elif valasztas == "3":
-        foglalasok_listazasa()
-    elif valasztas == "4":
-        print("Kilépés...")
-        break
-    else:
-        print("Nincs ilyen művelet! Kérem, válasszon másik számot.")
+    while True:
+        print("\nVálasszon műveletet:")
+        print("1. Foglalás felvétele")
+        print("2. Foglalás lemondása")
+        print("3. Foglalások listázása")
+        print("4. Kilépés")
+
+        valasztas = input("Kérem, adja meg a választott művelet sorszámát: ")
+
+        if valasztas == "1":
+            foglalas_felvetel(hotel)
+        elif valasztas == "2":
+            foglalas_leadas(hotel)
+        elif valasztas == "3":
+            foglalasok_listazasa(hotel)
+        elif valasztas == "4":
+            print("Kilépés...")
+            break
+        else:
+            print("Nincs ilyen művelet! Kérem, válasszon másik számot.")
+
+
+if __name__ == "__main__":
+    main()
